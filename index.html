@@ -22,7 +22,7 @@
             </a>
             
             <!-- Add Product Button (aligned to right) -->
-            <button class="btn btn-light" id="addProductBtn">
+            <button class="btn btn-light" id="addProductBtn" data-bs-toggle="modal" data-bs-target="#addProductModal">
                 Add Product
             </button>
         </div>
@@ -33,6 +33,57 @@
         <!-- Product Container - Products will be dynamically injected here -->
         <div id="product-container" class="row">
             <!-- JavaScript will populate products here -->
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <!-- Modal Body with Form -->
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <!-- Product Title Input -->
+                        <div class="mb-3">
+                            <label for="productTitle" class="form-label">Product Title</label>
+                            <input type="text" class="form-control" id="productTitle" placeholder="Enter product title" required>
+                        </div>
+                        
+                        <!-- Product Description Input -->
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="productDescription" rows="3" placeholder="Enter product description" required></textarea>
+                        </div>
+                        
+                        <!-- Product Price Input -->
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Price ($)</label>
+                            <input type="number" class="form-control" id="productPrice" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+                        
+                        <!-- Product Category Input -->
+                        <div class="mb-3">
+                            <label for="productCategory" class="form-label">Category</label>
+                            <input type="text" class="form-control" id="productCategory" placeholder="e.g., beauty, electronics" required>
+                        </div>
+                        
+                        <!-- Product Thumbnail URL Input -->
+                        <div class="mb-3">
+                            <label for="productThumbnail" class="form-label">Thumbnail URL</label>
+                            <input type="url" class="form-control" id="productThumbnail" placeholder="https://example.com/image.jpg" required>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-100">Add Product</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

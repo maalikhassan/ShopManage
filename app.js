@@ -110,12 +110,100 @@ function editProduct(productId) {
 }
 
 // =====================================================
-// FUNCTION: Delete Product (Placeholder)
+// FUNCTION: Add Product (Create)
 // =====================================================
-function deleteProduct(productId) {
-    // TODO: Will implement delete functionality later
-    console.log('Delete product with ID:', productId);
-    alert(`Delete functionality for product ID ${productId} will be implemented next.`);
+// This function sends a POST request to add a new product
+async function addProduct(title, description, price, category, thumbnail) {
+    try {
+        // Step 1: Create the product object with all essential data from form
+        const productData = {
+            title: title,
+            description: description,
+            price: price,
+            category: category,
+            thumbnail: thumbnail
+        };
+        
+        // Step 2: Send POST request to API using fetch with async/await
+        const response = await fetch('https://dummyjson.com/products/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData) // Convert JavaScript object to JSON string
+        });
+        
+        // Step 3: Convert response to JSON
+        const data = await response.json();
+        
+        // Step 4: Log the returned data to console (for debugging)
+        console.log('Product added successfully:', data);
+        
+        // Step 5: Show success message to user
+        alert('Product Added');
+        
+        // Step 6: Close the modal after successful addition
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+        modal.hide();
+        
+        // Step 7: Clear the form for next use
+        document.getElementById('addProductForm').reset();
+        
+    } catch (error) {
+        // Handle any errors during the add process
+        console.error('Error adding product:', error);
+        alert('Failed to add product. Please try again.');
+    }
+}
+
+// =====================================================
+// FUNCTION: Delete Product
+// =====================================================
+// This function sends a DELETE request and removes the card from UI
+async function deleteProduct(productId) {
+    try {
+        // Step 1: Send DELETE request to API
+        const response = await fetch(`https://dummyjson.com/products/${productId}`, {
+            method: 'DELETE'
+        });
+        
+        // Step 2: Check if the response status is 200 (success)
+        if (response.status === 200) {
+            // Step 3: Convert response to JSON
+            const data = await response.json();
+            console.log('Product deleted successfully:', data);
+            
+            // Step 4: Find the product card in the DOM and remove it
+            // We need to find the card that contains the button with this product ID
+            const productCards = document.querySelectorAll('#product-container .col-md-4');
+            
+            // Loop through all cards to find the one with matching product ID
+            productCards.forEach(card => {
+                const deleteButton = card.querySelector(`button[onclick="deleteProduct(${productId})"]`);
+                if (deleteButton) {
+                    // Remove the card from DOM with a smooth animation
+                    card.style.opacity = '0';
+                    card.style.transition = 'opacity 0.3s';
+                    
+                    // Wait for animation to complete before removing
+                    setTimeout(() => {
+                        card.remove();
+                    }, 300);
+                }
+            });
+            
+            // Step 5: Show success message
+            alert('Product deleted successfully');
+        } else {
+            // If status is not 200, show error
+            alert('Failed to delete product');
+        }
+        
+    } catch (error) {
+        // Handle any errors during the delete process
+        console.error('Error deleting product:', error);
+        alert('Failed to delete product. Please try again.');
+    }
 }
 
 // =====================================================
@@ -125,4 +213,24 @@ function deleteProduct(productId) {
 document.addEventListener('DOMContentLoaded', function() {
     // Fetch and display products when page loads
     fetchProducts();
+    
+    // =====================================================
+    // EVENT LISTENER: Add Product Form Submission
+    // =====================================================
+    const addProductForm = document.getElementById('addProductForm');
+    
+    addProductForm.addEventListener('submit', function(event) {
+        // Step 1: Prevent default form submission (prevents page refresh)
+        event.preventDefault();
+        
+        // Step 2: Get all the values from the form inputs
+        const title = document.getElementById('productTitle').value;
+        const description = document.getElementById('productDescription').value;
+        const price = parseFloat(document.getElementById('productPrice').value); // Convert to number
+        const category = document.getElementById('productCategory').value;
+        const thumbnail = document.getElementById('productThumbnail').value;
+        
+        // Step 3: Call the addProduct function with all the form data
+        addProduct(title, description, price, category, thumbnail);
+    });
 });
