@@ -10,7 +10,7 @@
    CSS Variables - Easy to Explain & Customize
    ===================================================== */
 :root {
-    /* Color Variables */
+    /* Color Variables - Product/Inventory Theme */
     --primary-color: #0d6efd;        /* Bootstrap blue */
     --secondary-color: #6c757d;      /* Bootstrap gray */
     --success-color: #198754;        /* Green for price */
@@ -18,6 +18,8 @@
     --warning-color: #ffc107;        /* Yellow for edit */
     --light-bg: #f8f9fa;             /* Light background */
     --dark-text: #212529;            /* Dark text color */
+    --hero-bg: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%); /* Blue gradient matching navbar */
+    --accent-color: #0d6efd;         /* Accent blue matching primary */
     
     /* Shadow Variables */
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -96,7 +98,194 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
+
+.brand-main {
+    font-size: 1.5rem;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   Hero Section - Explains the App
+   ===================================================== */
+.hero-section {
+    background: var(--hero-bg);
+    color: white;
+    padding: 2.5rem 0;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.hero-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Stats Box */
+.stats-box {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/* =====================================================
+   Section Header - Product Catalog Title
+   ===================================================== */
+.section-header {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-text);
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--accent-color);
+    border-radius: 2px;
+}
+
+.section-description {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-top: 1rem;
+}
+
+/* =====================================================
+   Product Card Enhancements - More Personality
+   ===================================================== */
+.card {
+    /* Initial state */
+    transition: var(--transition-smooth);
+    border: none;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    background: white;
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent-color);
+    border-radius: 8px 8px 0 0;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card:hover {
+    /* Hover state - lift up slightly */
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Card image styling */
+.card-img-top {
+    transition: var(--transition-smooth);
+    background: var(--light-bg);
+}
+
+.card:hover .card-img-top {
+    /* Slight zoom on hover */
+    transform: scale(1.05);
+}
+
+/* Prevent image overflow when zooming */
+.card {
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+/* Card Title Styling */
+.card-title {
+    color: var(--dark-text);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Price Badge Enhancement */
+.text-success {
+    color: var(--success-color) !important;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+/* Category Badge Enhancement */
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.8em;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;
+}
+
+/* Button Group Spacing */
+.mt-auto .btn {
+    font-size: 0.875rem;
+}
+
+/* =====================================================
+   Navbar Enhancements (Original Section - Removed Duplicate)
+   ===================================================== */
 
 /* =====================================================
    Button Enhancements
@@ -116,22 +305,20 @@ body {
     transform: translateY(0);
 }
 
-/* =====================================================
-   Product Price Styling
-   ===================================================== */
-.text-success {
-    color: var(--success-color) !important;
+/* Navbar Add Button */
+.navbar .btn-light {
     font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+}
+
+.navbar .btn-light i {
+    margin-right: 0.5rem;
 }
 
 /* =====================================================
-   Badge Styling
+   Product Price Styling
    ===================================================== */
-.badge {
-    font-weight: 500;
-    padding: 0.4em 0.8em;
-    border-radius: 4px;
-}
 
 /* =====================================================
    Modal Enhancements
@@ -196,6 +383,37 @@ body {
     
     .navbar-brand {
         font-size: 1.25rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .brand-main {
+        font-size: 1.25rem;
+    }
+    
+    .brand-subtitle {
+        font-size: 0.65rem;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .stats-box {
+        margin-top: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-description {
+        font-size: 1rem;
     }
 }
 

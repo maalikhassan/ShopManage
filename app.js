@@ -42,6 +42,9 @@ async function fetchProducts() {
             displayProduct(product);
         });
         
+        // Update product count in hero section
+        updateProductCount();
+        
     } catch (error) {
         // Step 6: Handle any errors that occur during fetch
         console.error('Error fetching products:', error);
@@ -105,6 +108,19 @@ function displayProduct(product) {
     
     // Step 3: Add the card to the product container
     productContainer.appendChild(productCard);
+}
+
+// =====================================================
+// FUNCTION: Update Product Count
+// =====================================================
+// This function counts and displays the total number of products
+function updateProductCount() {
+    const productCards = document.querySelectorAll('#product-container .col-md-4');
+    const count = productCards.length;
+    const countElement = document.getElementById('productCount');
+    if (countElement) {
+        countElement.textContent = count;
+    }
 }
 
 // =====================================================
@@ -262,6 +278,9 @@ async function addProduct(title, description, price, category, thumbnail) {
         // Step 5: Display the new product card on the page immediately
         displayProduct(data);
         
+        // Update product count
+        updateProductCount();
+        
         // Step 6: Show success message to user
         Swal.fire({
             icon: 'success',
@@ -319,6 +338,9 @@ async function deleteProduct(productId) {
             if (cardToDelete) {
                 cardToDelete.remove();
             }
+            
+            // Update product count
+            updateProductCount();
             
             // Step 5: Show success message
             Swal.fire({
