@@ -33,10 +33,17 @@
 /* =====================================================
    Global Styles
    ===================================================== */
+html {
+    overflow-x: hidden;
+    overscroll-behavior: none; /* Prevent white space when pulling down */
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background-color: var(--light-bg);
     color: var(--dark-text);
+    overflow-x: hidden;
+    overscroll-behavior-y: none; /* Prevent rubber band effect on scroll */
 }
 
 /* =====================================================
