@@ -1,0 +1,207 @@
+/* =====================================================
+   ShopManage - Custom Styles
+   Premium look with Bootstrap 5
+   ===================================================== */
+
+/* Import Google Font - Inter (Modern, Clean Font) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* =====================================================
+   CSS Variables - Easy to Explain & Customize
+   ===================================================== */
+:root {
+    /* Color Variables */
+    --primary-color: #0d6efd;        /* Bootstrap blue */
+    --secondary-color: #6c757d;      /* Bootstrap gray */
+    --success-color: #198754;        /* Green for price */
+    --danger-color: #dc3545;         /* Red for delete */
+    --warning-color: #ffc107;        /* Yellow for edit */
+    --light-bg: #f8f9fa;             /* Light background */
+    --dark-text: #212529;            /* Dark text color */
+    
+    /* Shadow Variables */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+    
+    /* Transition Variable */
+    --transition-smooth: all 0.3s ease;
+}
+
+/* =====================================================
+   Global Styles
+   ===================================================== */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+}
+
+/* =====================================================
+   Product Card Hover Effects
+   ===================================================== */
+.card {
+    /* Initial state */
+    transition: var(--transition-smooth);
+    border: none;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+}
+
+.card:hover {
+    /* Hover state - lift up slightly */
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Card image styling */
+.card-img-top {
+    transition: var(--transition-smooth);
+}
+
+.card:hover .card-img-top {
+    /* Slight zoom on hover */
+    transform: scale(1.05);
+}
+
+/* Prevent image overflow when zooming */
+.card {
+    overflow: hidden;
+}
+
+/* =====================================================
+   Loading Spinner - Professional Look
+   ===================================================== */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+/* Loading container styling */
+.col-12.text-center.mt-5 {
+    padding: 60px 20px;
+}
+
+.col-12.text-center.mt-5 p {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+/* =====================================================
+   Navbar Enhancements
+   ===================================================== */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* =====================================================
+   Button Enhancements
+   ===================================================== */
+.btn {
+    transition: var(--transition-smooth);
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* =====================================================
+   Product Price Styling
+   ===================================================== */
+.text-success {
+    color: var(--success-color) !important;
+    font-weight: 600;
+}
+
+/* =====================================================
+   Badge Styling
+   ===================================================== */
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+}
+
+/* =====================================================
+   Modal Enhancements
+   ===================================================== */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 1.2rem 1.5rem;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Form input styling */
+.form-control,
+.form-select {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    transition: var(--transition-smooth);
+    padding: 0.6rem 0.75rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* =====================================================
+   Alert Styling
+   ===================================================== */
+.alert {
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+}
+
+/* =====================================================
+   Responsive Adjustments
+   ===================================================== */
+@media (max-width: 768px) {
+    .card:hover {
+        /* Less dramatic lift on mobile */
+        transform: translateY(-4px);
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+}
+
+/* =====================================================
+   Smooth Scrolling
+   ===================================================== */
+html {
+    scroll-behavior: smooth;
+}
