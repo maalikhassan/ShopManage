@@ -139,14 +139,17 @@ async function addProduct(title, description, price, category, thumbnail) {
         // Step 4: Log the returned data to console (for debugging)
         console.log('Product added successfully:', data);
         
-        // Step 5: Show success message to user
+        // Step 5: Display the new product card on the page immediately
+        displayProduct(data);
+        
+        // Step 6: Show success message to user
         alert('Product Added');
         
-        // Step 6: Close the modal after successful addition
+        // Step 7: Close the modal after successful addition
         const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
         modal.hide();
         
-        // Step 7: Clear the form for next use
+        // Step 8: Clear the form for next use
         document.getElementById('addProductForm').reset();
         
     } catch (error) {
