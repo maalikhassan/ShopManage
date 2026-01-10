@@ -142,7 +142,11 @@ async function editProduct(productId) {
     } catch (error) {
         // Handle any errors during fetch
         console.error('Error fetching product for edit:', error);
-        alert('Failed to load product data. Please try again.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to load product data. Please try again.'
+        });
     }
 }
 
@@ -189,7 +193,13 @@ async function updateProduct(productId, title, description, price, category, thu
             displayProduct(data);
             
             // Step 7: Show success message to user
-            alert('Product Updated');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Product updated successfully!',
+                timer: 2000,
+                showConfirmButton: false
+            });
             
             // Step 8: Close the modal after successful update
             const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
@@ -201,13 +211,21 @@ async function updateProduct(productId, title, description, price, category, thu
             document.getElementById('addProductModalLabel').textContent = 'Add New Product'; // Reset modal title
             document.getElementById('submitProductBtn').textContent = 'Add Product'; // Reset button text
         } else {
-            alert('Failed to update product');
+            Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: 'Failed to update product. Please try again.'
+            });
         }
         
     } catch (error) {
         // Handle any errors during the update process
         console.error('Error updating product:', error);
-        alert('Failed to update product. Please try again.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to update product. Please try again.'
+        });
     }
 }
 
@@ -245,7 +263,13 @@ async function addProduct(title, description, price, category, thumbnail) {
         displayProduct(data);
         
         // Step 6: Show success message to user
-        alert('Product Added');
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Product added successfully!',
+            timer: 2000,
+            showConfirmButton: false
+        });
         
         // Step 7: Close the modal after successful addition
         const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
@@ -262,7 +286,11 @@ async function addProduct(title, description, price, category, thumbnail) {
     } catch (error) {
         // Handle any errors during the add process
         console.error('Error adding product:', error);
-        alert('Failed to add product. Please try again.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to add product. Please try again.'
+        });
     }
 }
 
@@ -293,16 +321,30 @@ async function deleteProduct(productId) {
             }
             
             // Step 5: Show success message
-            alert('Product deleted successfully');
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Product has been deleted successfully.',
+                timer: 2000,
+                showConfirmButton: false
+            });
         } else {
             // If status is not 200, show error
-            alert('Failed to delete product');
+            Swal.fire({
+                icon: 'error',
+                title: 'Delete Failed',
+                text: 'Failed to delete product. Please try again.'
+            });
         }
         
     } catch (error) {
         // Handle any errors during the delete process
         console.error('Error deleting product:', error);
-        alert('Failed to delete product. Please try again.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to delete product. Please check your connection.'
+        });
     }
 }
 
