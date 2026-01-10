@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Manage</title>
+    <title>ShopManage - Product Management System</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Link to custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <!-- Logo/Brand Name -->
+            <a class="navbar-brand fw-bold" href="#">
+                ShopManage
+            </a>
+            
+            <!-- Add Product Button (aligned to right) -->
+            <button class="btn btn-light" id="addProductBtn">
+                Add Product
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="container mt-4">
+        <!-- Product Container - Products will be dynamically injected here -->
+        <div id="product-container" class="row">
+            <!-- JavaScript will populate products here -->
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Link to custom JavaScript file -->
+    <script src="app.js"></script>
     
 </body>
 </html>
