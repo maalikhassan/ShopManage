@@ -11,39 +11,73 @@ const productContainer = document.getElementById('product-container');
 let editingProductId = null;
 
 // =====================================================
-// FUNCTION: Fetch Products from API
+// LOCAL STORAGE - To persist products on the browser
 // =====================================================
-// This function fetches product data from the API and displays it
+// Local products array - stores all products in memory
+let localProducts = [];
+
+// Helper function: Get products from localStorage
+function getLocalProducts() {
+    const stored = localStorage.getItem('shopManageProducts');
+    return stored ? JSON.parse(stored) : null;
+}
+
+// Helper function: Save products to localStorage
+function saveLocalProducts(products) {
+    localStorage.setItem('shopManageProducts', JSON.stringify(products));
+    localProducts = products;
+}
+
+// =====================================================
+// FUNCTION: Fetch Products from API or Local Storage
+// =====================================================
+// This function loads products from localStorage or fetches from API on first load
 async function fetchProducts() {
     try {
-        // Step 1: Show loading message while data is being fetched
-        productContainer.innerHTML = `
-            <div class="col-12 text-center mt-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+        // Step 1: Check if we have products in localStorage
+        const storedProducts = getLocalProducts();
+        
+        if (storedProducts && storedProducts.length > 0) {
+            // Step 2a: Load from localStorage (faster, offline support)
+            localProducts = storedProducts;
+            productContainer.innerHTML = '';
+            
+            localProducts.forEach(product => {
+                displayProduct(product);
+            });
+            
+            updateProductCount();
+        } else {
+            // Step 2b: No local data, fetch from API (first time load)
+            productContainer.innerHTML = `
+                <div class="col-12 text-center mt-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading products...</p>
                 </div>
-                <p class="mt-3">Loading products...</p>
-            </div>
-        `;
+            `;
 
-        // Step 2: Fetch data from API using fetch with async/await
-        const response = await fetch('https://dummyjson.com/products?limit=10');
-        
-        // Step 3: Convert response to JSON format
-        const data = await response.json();
-        
-        // Step 4: Clear the loading message
-        productContainer.innerHTML = '';
-        
-        // Step 5: Loop through each product in the products array
-        // Note: API returns an object with a 'products' array inside
-        data.products.forEach(product => {
-            // Call function to create and display each product card
-            displayProduct(product);
-        });
-        
-        // Update product count in hero section
-        updateProductCount();
+            // Step 3: Fetch data from API using fetch with async/await
+            const response = await fetch('https://dummyjson.com/products?limit=10');
+            
+            // Step 4: Convert response to JSON format
+            const data = await response.json();
+            
+            // Step 5: Save to localStorage for future use
+            saveLocalProducts(data.products);
+            
+            // Step 6: Clear the loading message
+            productContainer.innerHTML = '';
+            
+            // Step 7: Loop through each product and display
+            localProducts.forEach(product => {
+                displayProduct(product);
+            });
+            
+            // Update product count in hero section
+            updateProductCount();
+        }
         
     } catch (error) {
         // Step 6: Handle any errors that occur during fetch
@@ -126,14 +160,21 @@ function updateProductCount() {
 // =====================================================
 // FUNCTION: Edit Product
 // =====================================================
-// This function fetches product data and opens the modal with pre-filled data
-async function editProduct(productId) {
+// This function gets product data from local storage and opens the modal with pre-filled data
+function editProduct(productId) {
     try {
-        // Step 1: Fetch the single product data from API
-        const response = await fetch(`https://dummyjson.com/products/${productId}`);
+        // Step 1: Find the product in local storage array
+        const product = localProducts.find(p => p.id === productId);
         
-        // Step 2: Convert response to JSON
-        const product = await response.json();
+        // Step 2: Check if product was found
+        if (!product) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Product Not Found',
+                text: 'Could not find this product in local storage.'
+            });
+            return;
+        }
         
         // Step 3: Store the product ID globally so we know we're in Edit mode
         editingProductId = productId;
@@ -148,16 +189,16 @@ async function editProduct(productId) {
         // Step 5: Change the modal title to show we're editing
         document.getElementById('addProductModalLabel').textContent = 'Edit Product';
         
-        // Step 5b: Change the submit button text to 'Update Product'
+        // Step 6: Change the submit button text to 'Update Product'
         document.getElementById('submitProductBtn').textContent = 'Update Product';
         
-        // Step 6: Open the modal
+        // Step 7: Open the modal
         const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
         modal.show();
         
     } catch (error) {
-        // Handle any errors during fetch
-        console.error('Error fetching product for edit:', error);
+        // Handle any errors
+        console.error('Error loading product for edit:', error);
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -192,21 +233,35 @@ async function updateProduct(productId, title, description, price, category, thu
         
         // Step 3: Check if the response status is 200 (success)
         if (response.status === 200) {
-            // Step 4: Convert response to JSON
-            const data = await response.json();
+            // Step 4: Find the product in local array and update it
+            const productIndex = localProducts.findIndex(p => p.id === productId);
             
-            // Step 5: Log the returned data to console (for debugging)
-            console.log('Product updated successfully:', data);
-            
-            // Step 6: Update the product card on the page with new data
-            // First, remove the old card
-            const oldCard = document.querySelector(`[data-product-id="${productId}"]`);
-            if (oldCard) {
-                oldCard.remove();
+            if (productIndex !== -1) {
+                // Step 5: Update the product in local array
+                localProducts[productIndex] = {
+                    id: productId,
+                    title: title,
+                    description: description,
+                    price: price,
+                    category: category,
+                    thumbnail: thumbnail
+                };
+                
+                // Step 6: Save to localStorage
+                saveLocalProducts(localProducts);
+                
+                // Step 7: Log the result
+                console.log('Product updated successfully:', localProducts[productIndex]);
+                
+                // Step 8: Update the UI - remove old card
+                const oldCard = document.querySelector(`[data-product-id="${productId}"]`);
+                if (oldCard) {
+                    oldCard.remove();
+                }
+                
+                // Then, display the updated product card
+                displayProduct(localProducts[productIndex]);
             }
-            
-            // Then, display the updated product card
-            displayProduct(data);
             
             // Step 7: Show success message to user
             Swal.fire({
@@ -272,11 +327,33 @@ async function addProduct(title, description, price, category, thumbnail) {
         // Step 3: Convert response to JSON
         const data = await response.json();
         
-        // Step 4: Log the returned data to console (for debugging)
-        console.log('Product added successfully:', data);
+        // Step 4: Generate a unique ID for the new product
+        // Find the highest ID in local products and add 1
+        const newId = localProducts.length > 0 
+            ? Math.max(...localProducts.map(p => p.id)) + 1 
+            : 101;
         
-        // Step 5: Display the new product card on the page immediately
-        displayProduct(data);
+        // Step 5: Create the complete product object
+        const newProduct = {
+            id: newId,
+            title: title,
+            description: description,
+            price: price,
+            category: category,
+            thumbnail: thumbnail
+        };
+        
+        // Step 6: Add to local products array
+        localProducts.push(newProduct);
+        
+        // Step 7: Save to localStorage
+        saveLocalProducts(localProducts);
+        
+        // Step 8: Log the result
+        console.log('Product added successfully:', newProduct);
+        
+        // Step 9: Display the new product card on the page immediately
+        displayProduct(newProduct);
         
         // Update product count
         updateProductCount();
@@ -326,12 +403,16 @@ async function deleteProduct(productId) {
         
         // Step 2: Check if the response status is 200 (success)
         if (response.status === 200) {
-            // Step 3: Convert response to JSON
-            const data = await response.json();
-            console.log('Product deleted successfully:', data);
+            // Step 3: Remove product from local array
+            localProducts = localProducts.filter(p => p.id !== productId);
             
-            // Step 4: Find and remove the product card from the page
-            // Find the card with matching product ID using the data-product-id attribute
+            // Step 4: Save updated array to localStorage
+            saveLocalProducts(localProducts);
+            
+            // Step 5: Log the result
+            console.log('Product deleted successfully from local storage');
+            
+            // Step 6: Find and remove the product card from the page
             const cardToDelete = document.querySelector(`[data-product-id="${productId}"]`);
             
             // If we found the card, remove it from the page
