@@ -6,6 +6,10 @@
 // Get reference to the product container where products will be displayed
 const productContainer = document.getElementById('product-container');
 
+// Global variable to store the ID of the product being edited
+// If null, we're in 'Add' mode. If it has a value, we're in 'Edit' mode
+let editingProductId = null;
+
 // =====================================================
 // FUNCTION: Fetch Products from API
 // =====================================================
@@ -104,12 +108,107 @@ function displayProduct(product) {
 }
 
 // =====================================================
-// FUNCTION: Edit Product (Placeholder)
+// FUNCTION: Edit Product
 // =====================================================
-function editProduct(productId) {
-    // TODO: Will implement edit functionality later
-    console.log('Edit product with ID:', productId);
-    alert(`Edit functionality for product ID ${productId} will be implemented next.`);
+// This function fetches product data and opens the modal with pre-filled data
+async function editProduct(productId) {
+    try {
+        // Step 1: Fetch the single product data from API
+        const response = await fetch(`https://dummyjson.com/products/${productId}`);
+        
+        // Step 2: Convert response to JSON
+        const product = await response.json();
+        
+        // Step 3: Store the product ID globally so we know we're in Edit mode
+        editingProductId = productId;
+        
+        // Step 4: Pre-fill the form fields with existing product data
+        document.getElementById('productTitle').value = product.title;
+        document.getElementById('productDescription').value = product.description;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productCategory').value = product.category;
+        document.getElementById('productThumbnail').value = product.thumbnail;
+        
+        // Step 5: Change the modal title to show we're editing
+        document.getElementById('addProductModalLabel').textContent = 'Edit Product';
+        
+        // Step 5b: Change the submit button text to 'Update Product'
+        document.getElementById('submitProductBtn').textContent = 'Update Product';
+        
+        // Step 6: Open the modal
+        const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
+        modal.show();
+        
+    } catch (error) {
+        // Handle any errors during fetch
+        console.error('Error fetching product for edit:', error);
+        alert('Failed to load product data. Please try again.');
+    }
+}
+
+// =====================================================
+// FUNCTION: Update Product
+// =====================================================
+// This function sends a PUT request to update an existing product
+async function updateProduct(productId, title, description, price, category, thumbnail) {
+    try {
+        // Step 1: Create the product object with updated data
+        const productData = {
+            title: title,
+            description: description,
+            price: price,
+            category: category,
+            thumbnail: thumbnail
+        };
+        
+        // Step 2: Send PUT request to API using fetch with async/await
+        const response = await fetch(`https://dummyjson.com/products/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData) // Convert JavaScript object to JSON string
+        });
+        
+        // Step 3: Check if the response status is 200 (success)
+        if (response.status === 200) {
+            // Step 4: Convert response to JSON
+            const data = await response.json();
+            
+            // Step 5: Log the returned data to console (for debugging)
+            console.log('Product updated successfully:', data);
+            
+            // Step 6: Update the product card on the page with new data
+            // First, remove the old card
+            const oldCard = document.querySelector(`[data-product-id="${productId}"]`);
+            if (oldCard) {
+                oldCard.remove();
+            }
+            
+            // Then, display the updated product card
+            displayProduct(data);
+            
+            // Step 7: Show success message to user
+            alert('Product Updated');
+            
+            // Step 8: Close the modal after successful update
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+            modal.hide();
+            
+            // Step 9: Clear the form and reset editing mode
+            document.getElementById('addProductForm').reset();
+            editingProductId = null; // Clear the editing ID
+            document.getElementById('addProductModalLabel').textContent = 'Add New Product'; // Reset modal title
+            document.getElementById('submitProductBtn').textContent = 'Add Product'; // Reset button text
+        } else {
+            alert('Failed to update product');
+        }
+        
+    } catch (error) {
+        // Handle any errors during the update process
+        console.error('Error updating product:', error);
+        alert('Failed to update product. Please try again.');
+    }
 }
 
 // =====================================================
@@ -154,6 +253,11 @@ async function addProduct(title, description, price, category, thumbnail) {
         
         // Step 8: Clear the form for next use
         document.getElementById('addProductForm').reset();
+        
+        // Step 9: Reset editing mode (in case it was set)
+        editingProductId = null;
+        document.getElementById('addProductModalLabel').textContent = 'Add New Product';
+        document.getElementById('submitProductBtn').textContent = 'Add Product';
         
     } catch (error) {
         // Handle any errors during the add process
@@ -226,7 +330,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const category = document.getElementById('productCategory').value;
         const thumbnail = document.getElementById('productThumbnail').value;
         
-        // Step 3: Call the addProduct function with all the form data
-        addProduct(title, description, price, category, thumbnail);
+        // Step 3: Check if we're in Edit mode or Add mode
+        if (editingProductId !== null) {
+            // We're editing an existing product - call updateProduct
+            updateProduct(editingProductId, title, description, price, category, thumbnail);
+        } else {
+            // We're adding a new product - call addProduct
+            addProduct(title, description, price, category, thumbnail);
+        }
+    });
+    
+    // =====================================================
+    // EVENT LISTENER: Reset form when modal is closed
+    // =====================================================
+    // This ensures the form is cleared when user closes modal without submitting
+    const addProductModal = document.getElementById('addProductModal');
+    addProductModal.addEventListener('hidden.bs.modal', function() {
+        // Clear the form
+        document.getElementById('addProductForm').reset();
+        // Reset editing mode
+        editingProductId = null;
+        // Reset modal title
+        document.getElementById('addProductModalLabel').textContent = 'Add New Product';
+        // Reset button text
+        document.getElementById('submitProductBtn').textContent = 'Add Product';
     });
 });
