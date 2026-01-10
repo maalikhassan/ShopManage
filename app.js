@@ -62,6 +62,9 @@ function displayProduct(product) {
     const productCard = document.createElement('div');
     productCard.className = 'col-md-4 col-sm-6 mb-4'; // Responsive: 3 cards on medium screens, 2 on small
     
+    // Step 1b: Add a unique ID to this card so we can find it later when deleting
+    productCard.setAttribute('data-product-id', product.id);
+    
     // Step 2: Create the card HTML structure with product details
     productCard.innerHTML = `
         <div class="card h-100 shadow-sm">
@@ -176,24 +179,14 @@ async function deleteProduct(productId) {
             const data = await response.json();
             console.log('Product deleted successfully:', data);
             
-            // Step 4: Find the product card in the DOM and remove it
-            // We need to find the card that contains the button with this product ID
-            const productCards = document.querySelectorAll('#product-container .col-md-4');
+            // Step 4: Find and remove the product card from the page
+            // Find the card with matching product ID using the data-product-id attribute
+            const cardToDelete = document.querySelector(`[data-product-id="${productId}"]`);
             
-            // Loop through all cards to find the one with matching product ID
-            productCards.forEach(card => {
-                const deleteButton = card.querySelector(`button[onclick="deleteProduct(${productId})"]`);
-                if (deleteButton) {
-                    // Remove the card from DOM with a smooth animation
-                    card.style.opacity = '0';
-                    card.style.transition = 'opacity 0.3s';
-                    
-                    // Wait for animation to complete before removing
-                    setTimeout(() => {
-                        card.remove();
-                    }, 300);
-                }
-            });
+            // If we found the card, remove it from the page
+            if (cardToDelete) {
+                cardToDelete.remove();
+            }
             
             // Step 5: Show success message
             alert('Product deleted successfully');
