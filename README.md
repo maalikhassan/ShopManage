@@ -257,16 +257,16 @@ let editingProductId = null;  // null = Add mode, value = Edit mode
 ## 📸 Screenshots
 
 ### Main Dashboard
-![Dashboard view with product cards and hero section]
+![Dashboard view with product cards and hero section](assets/img/main-dashboard.png)
 
 ### Add Product Modal
-![Modal form for adding new products]
+![Modal form for adding new products](assets/img/add-product.png)
 
 ### Edit Product
-![Pre-filled modal for editing existing products]
+![Pre-filled modal for editing existing products](assets/img/edit-product.png)
 
 ### SweetAlert Notifications
-![Beautiful success and error alerts]
+![Beautiful success and error alerts](assets/img/sweet-alert.png)
 
 ---
 
@@ -320,9 +320,9 @@ This project is open source and available for educational purposes.
 
 ## 👨‍💻 Author
 
-**Your Name**  
-Software Engineering Student  
-[Your University/Institution]
+**Maalik Hassan**  
+Aspiring Software Engineer  
+Icet-ICD119
 
 ---
 
