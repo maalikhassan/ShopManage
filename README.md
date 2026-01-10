@@ -322,7 +322,7 @@ This project is open source and available for educational purposes.
 
 **Maalik Hassan**  
 Aspiring Software Engineer  
-Icet-ICD119
+ICET-ICD119
 
 ---
 
