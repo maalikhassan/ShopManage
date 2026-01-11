@@ -80,7 +80,7 @@ async function fetchProducts() {
         }
         
     } catch (error) {
-        // Step 6: Handle any errors that occur during fetch
+        // Step 8: Handle any errors that occur during fetch
         console.error('Error fetching products:', error);
         
         // Show error message to user
@@ -107,6 +107,11 @@ function displayProduct(product) {
     productCard.setAttribute('data-product-id', product.id);
     
     // Step 2: Create the card HTML structure with product details
+    // Truncate description to 80 characters for card display
+    const shortDescription = product.description && product.description.length > 80 
+        ? product.description.substring(0, 80) + '...' 
+        : product.description || 'No description available';
+    
     productCard.innerHTML = `
         <div class="card h-100 shadow-sm">
             <!-- Product Image -->
@@ -121,6 +126,9 @@ function displayProduct(product) {
                 <p class="card-text">
                     <span class="badge bg-secondary">${product.category}</span>
                 </p>
+                
+                <!-- Product Description -->
+                <p class="card-text text-muted small">${shortDescription}</p>
                 
                 <!-- Product Price -->
                 <p class="card-text">
@@ -211,6 +219,8 @@ function editProduct(productId) {
 // FUNCTION: Update Product
 // =====================================================
 // This function sends a PUT request to update an existing product
+// Note: We still call the API to demonstrate proper REST practices,
+// but since DummyJSON doesn't persist data, we manage everything via localStorage
 async function updateProduct(productId, title, description, price, category, thumbnail) {
     try {
         // Step 1: Create the product object with updated data
@@ -263,7 +273,7 @@ async function updateProduct(productId, title, description, price, category, thu
                 displayProduct(localProducts[productIndex]);
             }
             
-            // Step 7: Show success message to user
+            // Step 9: Show success message to user
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
@@ -272,11 +282,11 @@ async function updateProduct(productId, title, description, price, category, thu
                 showConfirmButton: false
             });
             
-            // Step 8: Close the modal after successful update
+            // Step 10: Close the modal after successful update
             const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
             modal.hide();
             
-            // Step 9: Clear the form and reset editing mode
+            // Step 11: Clear the form and reset editing mode
             document.getElementById('addProductForm').reset();
             editingProductId = null; // Clear the editing ID
             document.getElementById('addProductModalLabel').textContent = 'Add New Product'; // Reset modal title
@@ -316,6 +326,7 @@ async function addProduct(title, description, price, category, thumbnail) {
         };
         
         // Step 2: Send POST request to API using fetch with async/await
+        // Note: The API response is not persisted by DummyJSON, so we manage data locally
         const response = await fetch('https://dummyjson.com/products/add', {
             method: 'POST',
             headers: {
@@ -324,17 +335,16 @@ async function addProduct(title, description, price, category, thumbnail) {
             body: JSON.stringify(productData) // Convert JavaScript object to JSON string
         });
         
-        // Step 3: Convert response to JSON
-        const data = await response.json();
-        
-        // Step 4: Generate a unique ID for the new product
-        // Find the highest ID in local products and add 1
-        const newId = localProducts.length > 0 
-            ? Math.max(...localProducts.map(p => p.id)) + 1 
-            : 101;
-        
-        // Step 5: Create the complete product object
-        const newProduct = {
+        // Step 3: Check if the response status is successful (200-299 range)
+        if (response.ok) {
+            // Step 4: Generate a unique ID for the new product
+            // Find the highest ID in local products and add 1
+            const newId = localProducts.length > 0 
+                ? Math.max(...localProducts.map(p => p.id)) + 1 
+                : 101;
+            
+            // Step 5: Create the complete product object
+            const newProduct = {
             id: newId,
             title: title,
             description: description,
@@ -355,10 +365,10 @@ async function addProduct(title, description, price, category, thumbnail) {
         // Step 9: Display the new product card on the page immediately
         displayProduct(newProduct);
         
-        // Update product count
+        // Step 10: Update product count
         updateProductCount();
         
-        // Step 6: Show success message to user
+        // Step 11: Show success message to user
         Swal.fire({
             icon: 'success',
             title: 'Success!',
@@ -367,18 +377,24 @@ async function addProduct(title, description, price, category, thumbnail) {
             showConfirmButton: false
         });
         
-        // Step 7: Close the modal after successful addition
+        // Step 12: Close the modal after successful addition
         const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
         modal.hide();
         
-        // Step 8: Clear the form for next use
+        // Step 13: Clear the form for next use
         document.getElementById('addProductForm').reset();
         
-        // Step 9: Reset editing mode (in case it was set)
+        // Step 14: Reset editing mode (in case it was set)
         editingProductId = null;
         document.getElementById('addProductModalLabel').textContent = 'Add New Product';
-        document.getElementById('submitProductBtn').textContent = 'Add Product';
-        
+        document.getElementById('submitProductBtn').textContent = 'Add Product';        } else {
+            // If status is not ok, show error
+            Swal.fire({
+                icon: 'error',
+                title: 'Add Failed',
+                text: 'Failed to add product. Please try again.'
+            });
+        }        
     } catch (error) {
         // Handle any errors during the add process
         console.error('Error adding product:', error);
@@ -420,10 +436,10 @@ async function deleteProduct(productId) {
                 cardToDelete.remove();
             }
             
-            // Update product count
+            // Step 7: Update product count
             updateProductCount();
             
-            // Step 5: Show success message
+            // Step 8: Show success message
             Swal.fire({
                 icon: 'success',
                 title: 'Deleted!',
